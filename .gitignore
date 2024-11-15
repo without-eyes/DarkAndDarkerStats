@@ -1,0 +1,8 @@
+/.idea/
+/CMakeLists.txt
+/venv/
+/node_modules/
+/cmake-build-debug/
+/http_server.exe
+/package-lock.json
+/package.json
