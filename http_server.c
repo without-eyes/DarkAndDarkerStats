@@ -9,6 +9,49 @@
 #define INDEX_HTML "index.html"
 #define BACKEND_URL "http://localhost:5000/message"  // URL до Flask бекенду
 
+// Function to escape JSON string
+const char* escape_json_string(const char* input) {
+    static char escaped[2048];
+    int j = 0;
+    for (int i = 0; input[i] != '\0'; i++) {
+        switch (input[i]) {
+            case '\"':
+                escaped[j++] = '\\';
+                escaped[j++] = '\"';
+                break;
+            case '\\':
+                escaped[j++] = '\\';
+                escaped[j++] = '\\';
+                break;
+            case '\b':
+                escaped[j++] = '\\';
+                escaped[j++] = 'b';
+                break;
+            case '\f':
+                escaped[j++] = '\\';
+                escaped[j++] = 'f';
+                break;
+            case '\n':
+                escaped[j++] = '\\';
+                escaped[j++] = 'n';
+                break;
+            case '\r':
+                escaped[j++] = '\\';
+                escaped[j++] = 'r';
+                break;
+            case '\t':
+                escaped[j++] = '\\';
+                escaped[j++] = 't';
+                break;
+            default:
+                escaped[j++] = input[i];
+                break;
+        }
+    }
+    escaped[j] = '\0';
+    return escaped;
+}
+
 // Function to sanitize the response string
 const char* sanitize_json_string(const char* input) {
     static char cleaned_input[1024];
@@ -68,20 +111,18 @@ void handle_request(SOCKET client_socket) {
     // Перевірка, чи запит на головну сторінку
     if (strstr(buffer, "GET /message HTTP/1.1") != NULL) {
         const char *backend_message = get_backend_message();
-        puts(backend_message);
+        const char *escaped_message = escape_json_string(backend_message);
 
-        // Формуємо JSON відповідь
         char response[2048];
         snprintf(response, sizeof(response),
                  "HTTP/1.1 200 OK\r\n"
-                 "Content-Type: application/json; charset=utf-8\r\n"  // Ensure UTF-8 encoding is specified
+                 "Content-Type: application/json; charset=utf-8\r\n"
                  "Access-Control-Allow-Origin: *\r\n"
                  "\r\n"
                  "{\"message\": \"%s\"}",
-                 backend_message);
-
-        // Відправляємо відповідь
+                 escaped_message);
         send(client_socket, response, strlen(response), 0);
+
         closesocket(client_socket);
         return;
     }
