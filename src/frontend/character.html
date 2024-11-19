@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Character Details</title>
+</head>
+<body>
+<h1 id="characterName">Loading...</h1>
+<p id="characterLevel">Loading...</p>
+<p id="characterClass">Loading...</p>
+
+<script>
+  async function getCharacterDetails() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const characterId = urlParams.get('id');
+
+    try {
+      const response = await fetch(`/api/character/${characterId}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch character details');
+      }
+      const character = await response.json();
+      document.getElementById('characterName').textContent = character.name;
+      document.getElementById('characterLevel').textContent = `Level: ${character.level}`;
+      document.getElementById('characterClass').textContent = `Class: ${character.class}`;
+    } catch (error) {
+      console.error('Error fetching character details:', error);
+    }
+  }
+
+  window.onload = getCharacterDetails;
+</script>
+</body>
+</html>

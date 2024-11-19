@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Match Details</title>
+</head>
+<body>
+<h1 id="matchId">Loading...</h1>
+<p id="matchResult">Loading...</p>
+<p id="matchDate">Loading...</p>
+<p id="matchKills">Loading...</p>
+<p id="matchDeaths">Loading...</p>
+
+<script>
+  async function getMatchDetails() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const matchId = urlParams.get('id');
+
+    try {
+      const response = await fetch(`/api/match/${matchId}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch match details');
+      }
+      const match = await response.json();
+      document.getElementById('matchId').textContent = `Match #${match.id}`;
+      document.getElementById('matchResult').textContent = `Result: ${match.result}`;
+      document.getElementById('matchDate').textContent = `Date: ${match.date}`;
+      document.getElementById('matchKills').textContent = `Kills: ${match.kills}`;
+      document.getElementById('matchDeaths').textContent = `Deaths: ${match.deaths}`;
+    } catch (error) {
+      console.error('Error fetching match details:', error);
+    }
+  }
+
+  window.onload = getMatchDetails;
+</script>
+</body>
+</html>
