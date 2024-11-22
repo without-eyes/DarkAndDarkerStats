@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Account Settings</title>
+</head>
+<body>
+<form id="accountForm">
+  <label for="username">Username</label>
+  <input type="text" id="username" name="username" placeholder="Enter your username" required />
+
+  <label for="email">Email</label>
+  <input type="email" id="email" name="email" placeholder="Enter your email" required />
+
+  <label for="password">New Password</label>
+  <input type="password" id="password" name="password" placeholder="Enter new password" />
+
+  <button type="submit">Update Account</button>
+  <div id="message"></div>
+</form>
+
+<script>
+  const form = document.getElementById("accountForm");
+  const message = document.getElementById("message");
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const formData = {
+      username: form.username.value,
+      email: form.email.value,
+      password: form.password.value,
+    };
+
+    try {
+      const response = await fetch("/api/user/update", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        message.innerHTML = `<div class="success">Account updated successfully!</div>`;
+      } else {
+        message.innerHTML = `<div class="error">Error: ${result.message}</div>`;
+      }
+    } catch (error) {
+      message.innerHTML = `<div class="error">Error: ${error.message}</div>`;
+    }
+  });
+</script>
+</body>
+</html>
