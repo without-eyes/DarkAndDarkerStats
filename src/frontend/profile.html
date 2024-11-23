@@ -11,8 +11,11 @@
 
 <script>
   async function getUserCharacters() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const userId = urlParams.get('id');
+
     try {
-      const response = await fetch('/api/user/characters');
+      const response = await fetch(`/api/user/${userId}/characters`);
       if (!response.ok) {
         throw new Error('Failed to fetch characters');
       }

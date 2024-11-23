@@ -16,7 +16,7 @@
     const characterId = urlParams.get('id');
 
     try {
-      const response = await fetch(`/api/character/${characterId}`);
+      const response = await fetch(`/api/user/${userId}/characters/${characterId}`);
       if (!response.ok) {
         throw new Error('Failed to fetch character details');
       }

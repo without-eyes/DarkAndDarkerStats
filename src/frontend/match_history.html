@@ -12,7 +12,7 @@
 <script>
   async function getMatchHistory() {
     try {
-      const response = await fetch('/api/user/matches');
+      const response = await fetch(`/api/user/${userId}/matches`);
       if (!response.ok) {
         throw new Error('Failed to fetch match history');
       }
