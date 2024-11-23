@@ -1,8 +1,9 @@
 from flask import Flask, jsonify, request
 import mysql.connector
 from mysql.connector import Error
+from werkzeug.security import generate_password_hash, check_password_hash
 
-from src.backend import config
+import config
 
 app = Flask(__name__)
 
@@ -14,6 +15,64 @@ def get_db_connection():
         database=config.DB_NAME
     )
     return connection
+
+@app.route('/api/register', methods=['POST'])
+def register_user():
+    data = request.json
+
+    username = data.get('username')
+    email = data.get('email')
+    password = data.get('password')
+    confirm_password = data.get('confirm_password')
+
+    if not all([username, email, password, confirm_password]):
+        return jsonify({"message": "All fields are required"}), 400
+
+    if password != confirm_password:
+        return jsonify({"message": "Passwords do not match"}), 400
+
+    hashed_password = generate_password_hash(password)
+
+    connection = get_db_connection()
+    cursor = connection.cursor()
+
+    try:
+        cursor.execute(
+            "INSERT INTO users (username, email, passwordHash) VALUES (%s, %s, %s)",
+            (username, email, hashed_password)
+        )
+        connection.commit()
+    except mysql.connector.IntegrityError:
+        return jsonify({"message": "Username or email already exists"}), 400
+    finally:
+        cursor.close()
+        connection.close()
+
+    return jsonify({"message": "User registered successfully"}), 201
+
+@app.route('/api/login', methods=['POST'])
+def login_user():
+    data = request.json
+
+    email = data.get('email')
+    password = data.get('password')
+
+    if not all([email, password]):
+        return jsonify({"message": "Email and password are required"}), 400
+
+    connection = get_db_connection()
+    cursor = connection.cursor(dictionary=True)
+
+    cursor.execute("SELECT * FROM users WHERE email = %s", (email,))
+    user = cursor.fetchone()
+
+    cursor.close()
+    connection.close()
+
+    if user is None or not check_password_hash(user['passwordHash'], password):
+        return jsonify({"message": "Invalid email or password"}), 401
+
+    return jsonify({"message": "Login successful", "user": {"id": user['id'], "username": user['username']}}), 200
 
 @app.route('/api/user/<int:user_id>', methods=['GET'])
 def get_user(user_id):
