@@ -2,7 +2,7 @@ CREATE TABLE `users` (
   `id` INT PRIMARY KEY AUTO_INCREMENT,
   `username` VARCHAR(50) UNIQUE NOT NULL,
   `email` VARCHAR(100) UNIQUE NOT NULL,
-  `passwordHash` VARCHAR(50) NOT NULL,
+  `passwordHash` VARCHAR(255) NOT NULL,
   `created_at` timestamp DEFAULT 'current_timestamp'
 );
 
@@ -17,7 +17,6 @@ CREATE TABLE `characters` (
 
 CREATE TABLE `matches` (
   `id` INT PRIMARY KEY AUTO_INCREMENT,
-  `match_id` VARCHAR(50) UNIQUE NOT NULL,
   `start_time` DATETIME NOT NULL,
   `end_time` DATETIME NOT NULL,
   `map` VARCHAR(100) NOT NULL
