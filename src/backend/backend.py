@@ -88,6 +88,55 @@ def get_user(user_id):
 
     return jsonify(user)
 
+@app.route('/api/user/<int:user_id>', methods=['PATCH'])
+def update_user(user_id):
+    data = request.get_json()
+    connection = None
+
+    try:
+        connection = get_db_connection()
+        cursor = connection.cursor()
+
+        # Збираємо поля для оновлення
+        updates = []
+        values = []
+
+        if 'username' in data:
+            updates.append('username = %s')
+            values.append(data['username'])
+
+        if 'email' in data:
+            updates.append('email = %s')
+            values.append(data['email'])
+
+        if 'passwordHash' in data:
+            updates.append('passwordHash = %s')
+            values.append(data['passwordHash'])
+
+        if not updates:
+            return jsonify({"message": "No fields to update"}), 400
+
+        values.append(user_id)
+
+        # Формуємо запит
+        query = f"UPDATE users SET {', '.join(updates)} WHERE id = %s"
+        cursor.execute(query, values)
+        connection.commit()
+
+        if cursor.rowcount == 0:
+            return jsonify({"message": "User not found"}), 404
+
+        return jsonify({"message": "User updated successfully"}), 200
+
+    except Error as e:
+        print(f"Error: {e}")
+        return jsonify({"message": "Database error"}), 500
+
+    finally:
+        if connection and connection.is_connected():
+            cursor.close()
+            connection.close()
+
 @app.route('/api/user/<int:user_id>/characters', methods=['GET'])
 def get_user_characters(user_id):
     connection = get_db_connection()
@@ -141,56 +190,6 @@ def get_match(match_id):
         return jsonify({"message": "Match not found"}), 404
 
     return jsonify(match)
-
-@app.route('/api/user/<int:user_id>', methods=['PATCH'])
-def update_user(user_id):
-    data = request.get_json()
-    connection = None
-
-    try:
-        connection = get_db_connection()
-        cursor = connection.cursor()
-
-        # Збираємо поля для оновлення
-        updates = []
-        values = []
-
-        if 'username' in data:
-            updates.append('username = %s')
-            values.append(data['username'])
-
-        if 'email' in data:
-            updates.append('email = %s')
-            values.append(data['email'])
-
-        if 'passwordHash' in data:
-            updates.append('passwordHash = %s')
-            values.append(data['passwordHash'])
-
-        if not updates:
-            return jsonify({"message": "No fields to update"}), 400
-
-        values.append(user_id)
-
-        # Формуємо запит
-        query = f"UPDATE users SET {', '.join(updates)} WHERE id = %s"
-        cursor.execute(query, values)
-        connection.commit()
-
-        if cursor.rowcount == 0:
-            return jsonify({"message": "User not found"}), 404
-
-        return jsonify({"message": "User updated successfully"}), 200
-
-    except Error as e:
-        print(f"Error: {e}")
-        return jsonify({"message": "Database error"}), 500
-
-    finally:
-        if connection and connection.is_connected():
-            cursor.close()
-            connection.close()
-
 
 if __name__ == '__main__':
     app.run(debug=True)
