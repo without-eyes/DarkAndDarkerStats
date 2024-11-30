@@ -1,11 +1,13 @@
 from flask import Flask, jsonify, request
 import mysql.connector
+from flask_cors import CORS
 from mysql.connector import Error
 from werkzeug.security import generate_password_hash, check_password_hash
 
 import config
 
 app = Flask(__name__)
+CORS(app, origins=["http://localhost:3000"])
 
 def get_db_connection():
     connection = mysql.connector.connect(
@@ -52,7 +54,7 @@ def register_user():
 
 @app.route('/api/login', methods=['POST'])
 def login_user():
-    data = request.json
+    data = request.get_json()  # Отримуємо JSON з запиту
 
     email = data.get('email')
     password = data.get('password')
@@ -62,17 +64,15 @@ def login_user():
 
     connection = get_db_connection()
     cursor = connection.cursor(dictionary=True)
-
     cursor.execute("SELECT * FROM users WHERE email = %s", (email,))
     user = cursor.fetchone()
-
     cursor.close()
     connection.close()
 
     if user is None or not check_password_hash(user['passwordHash'], password):
         return jsonify({"message": "Invalid email or password"}), 401
 
-    return jsonify({"message": "Login successful", "user": {"id": user['id'], "username": user['username']}}), 200
+    return jsonify({"message": "Login successful"}), 200
 
 @app.route('/api/user/<int:user_id>', methods=['GET'])
 def get_user(user_id):
@@ -192,4 +192,4 @@ def get_match(match_id):
     return jsonify(match)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, port=5000)
