@@ -14,9 +14,15 @@
   async function getCharacterDetails() {
     const urlParams = new URLSearchParams(window.location.search);
     const characterId = urlParams.get('id');
+    const userId = urlParams.get('userId'); // Додано отримання userId
+
+    if (!characterId || !userId) {
+      console.error('Character ID or User ID is missing in URL');
+      return;
+    }
 
     try {
-      const response = await fetch(`/api/user/${userId}/characters/${characterId}`);
+      const response = await fetch(`http://localhost:5000/api/user/${userId}/characters/${characterId}`);
       if (!response.ok) {
         throw new Error('Failed to fetch character details');
       }
