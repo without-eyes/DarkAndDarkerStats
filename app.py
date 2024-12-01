@@ -1,26 +1,42 @@
+import logging
 from flask import Flask, jsonify, request
 import mysql.connector
 from flask_cors import CORS
 from mysql.connector import Error
 from werkzeug.security import generate_password_hash, check_password_hash
-
 import config
 
 app = Flask(__name__)
 CORS(app, origins=["http://localhost:3000"])
 
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(message)s",
+    handlers=[
+        logging.FileHandler("backend.log"),
+        logging.StreamHandler()
+    ]
+)
+logger = logging.getLogger(__name__)
+
 def get_db_connection():
-    connection = mysql.connector.connect(
-        host=config.DB_HOST,
-        user=config.DB_USER,
-        password=config.DB_PASSWORD,
-        database=config.DB_NAME
-    )
-    return connection
+    try:
+        connection = mysql.connector.connect(
+            host=config.DB_HOST,
+            user=config.DB_USER,
+            password=config.DB_PASSWORD,
+            database=config.DB_NAME
+        )
+        logger.info("Database connection established")
+        return connection
+    except Error as e:
+        logger.error(f"Database connection failed: {e}")
+        raise
 
 @app.route('/api/register', methods=['POST'])
 def register_user():
     data = request.json
+    logger.info(f"Received registration data: {data}")
 
     username = data.get('username')
     email = data.get('email')
@@ -28,9 +44,11 @@ def register_user():
     confirm_password = data.get('confirm_password')
 
     if not all([username, email, password, confirm_password]):
+        logger.warning("Registration failed: missing fields")
         return jsonify({"message": "All fields are required"}), 400
 
     if password != confirm_password:
+        logger.warning("Registration failed: passwords do not match")
         return jsonify({"message": "Passwords do not match"}), 400
 
     hashed_password = generate_password_hash(password)
@@ -44,22 +62,27 @@ def register_user():
             (username, email, hashed_password)
         )
         connection.commit()
+        logger.info(f"User {username} registered successfully")
     except mysql.connector.IntegrityError:
+        logger.warning("Registration failed: username or email already exists")
         return jsonify({"message": "Username or email already exists"}), 400
     finally:
         cursor.close()
         connection.close()
+        logger.info("Database connection closed")
 
     return jsonify({"message": "User registered successfully"}), 201
 
 @app.route('/api/login', methods=['POST'])
 def login_user():
-    data = request.get_json()  # Отримуємо JSON з запиту
+    data = request.get_json()
+    logger.info(f"Received login data: {data}")
 
     email = data.get('email')
     password = data.get('password')
 
     if not all([email, password]):
+        logger.warning("Login failed: missing email or password")
         return jsonify({"message": "Email and password are required"}), 400
 
     connection = get_db_connection()
@@ -70,12 +93,15 @@ def login_user():
     connection.close()
 
     if user is None or not check_password_hash(user['passwordHash'], password):
+        logger.warning("Login failed: invalid email or password")
         return jsonify({"message": "Invalid email or password"}), 401
 
+    logger.info(f"User {email} logged in successfully")
     return jsonify({"message": "Login successful"}), 200
 
 @app.route('/api/user/<int:user_id>', methods=['GET'])
 def get_user(user_id):
+    logger.info(f"Fetching user with ID {user_id}")
     connection = get_db_connection()
     cursor = connection.cursor(dictionary=True)
     cursor.execute('SELECT * FROM users WHERE id = %s', (user_id,))
@@ -84,8 +110,10 @@ def get_user(user_id):
     connection.close()
 
     if user is None:
+        logger.warning(f"User with ID {user_id} not found")
         return jsonify({"message": "User not found"}), 404
 
+    logger.info(f"User with ID {user_id} fetched successfully")
     return jsonify(user)
 
 @app.route('/api/user/<int:user_id>', methods=['PATCH'])

@@ -5,3 +5,4 @@
 /cmake-build-debug/
 /http_server.exe
 /package-lock.json
+/backend.log
