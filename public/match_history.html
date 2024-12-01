@@ -11,14 +11,28 @@
 
 <script>
   async function getMatchHistory() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const userId = urlParams.get('userId'); // Отримуємо userId з URL
+
+    if (!userId) {
+      console.error('User ID is missing in URL');
+      document.getElementById('matchesList').innerHTML = 'User ID is required.';
+      return;
+    }
+
     try {
-      const response = await fetch(`/api/user/${userId}/matches`);
+      const response = await fetch(`http://localhost:5000/api/user/${userId}/matches`);
       if (!response.ok) {
         throw new Error('Failed to fetch match history');
       }
       const matches = await response.json();
       const matchesList = document.getElementById('matchesList');
-      matchesList.innerHTML = '';
+      matchesList.innerHTML = ''; // Очищаємо "Loading..." текст
+
+      if (matches.length === 0) {
+        matchesList.innerHTML = 'No matches found.';
+        return;
+      }
 
       matches.forEach(match => {
         const li = document.createElement('li');
@@ -27,6 +41,7 @@
       });
     } catch (error) {
       console.error('Error fetching match history:', error);
+      document.getElementById('matchesList').innerHTML = 'Error fetching match history.';
     }
   }
 
