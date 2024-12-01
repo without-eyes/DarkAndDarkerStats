@@ -3,25 +3,68 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>User Characters</title>
+  <title>User Profile</title>
 </head>
 <body>
-<h1>Your Characters</h1>
+<h1>User Profile</h1>
+<div id="userInfo">
+  <p><strong>Username:</strong> <span id="username">Loading...</span></p>
+  <p><strong>Email:</strong> <span id="email">Loading...</span></p>
+  <p><strong>Registered Since:</strong> <span id="registeredSince">Loading...</span></p>
+  <button id="viewMatchesButton" style="display:none;">View My Matches</button>
+  <button id="viewCharactersButton" style="display:none;">View My Characters</button>
+</div>
+
+<h2>Your Characters</h2>
 <ul id="charactersList">Loading...</ul>
 
 <script>
-  async function getUserCharacters() {
+  async function getUserData() {
     const urlParams = new URLSearchParams(window.location.search);
     const userId = urlParams.get('id');
 
+    if (!userId) {
+      console.error('User ID is missing in URL');
+      document.getElementById('userInfo').innerHTML = 'User ID is required.';
+      return;
+    }
+
     try {
-      const response = await fetch(`/api/user/${userId}/characters`);
-      if (!response.ok) {
+      // Fetch user information
+      const userResponse = await fetch(`http://localhost:5000/api/user/${userId}`);
+      if (!userResponse.ok) {
+        throw new Error('Failed to fetch user data');
+      }
+      const user = await userResponse.json();
+      document.getElementById('username').textContent = user.username;
+      document.getElementById('email').textContent = user.email;
+      document.getElementById('registeredSince').textContent = user.registered_since;
+
+      // Show buttons
+      document.getElementById('viewMatchesButton').style.display = 'inline';
+      document.getElementById('viewCharactersButton').style.display = 'inline';
+
+      // Add button event listeners
+      document.getElementById('viewMatchesButton').addEventListener('click', () => {
+        window.location.href = `matches.html?id=${userId}`;
+      });
+      document.getElementById('viewCharactersButton').addEventListener('click', () => {
+        window.location.href = `characters.html?id=${userId}`;
+      });
+
+      // Fetch characters
+      const charactersResponse = await fetch(`http://localhost:5000/api/user/${userId}/characters`);
+      if (!charactersResponse.ok) {
         throw new Error('Failed to fetch characters');
       }
-      const characters = await response.json();
+      const characters = await charactersResponse.json();
       const charactersList = document.getElementById('charactersList');
-      charactersList.innerHTML = '';
+      charactersList.innerHTML = ''; // Clear the "Loading..." text
+
+      if (characters.length === 0) {
+        charactersList.innerHTML = 'No characters found.';
+        return;
+      }
 
       characters.forEach(character => {
         const li = document.createElement('li');
@@ -29,11 +72,12 @@
         charactersList.appendChild(li);
       });
     } catch (error) {
-      console.error('Error fetching characters:', error);
+      console.error('Error fetching user data:', error);
+      document.getElementById('userInfo').innerHTML = 'Error fetching user data.';
     }
   }
 
-  window.onload = getUserCharacters;
+  window.onload = getUserData;
 </script>
 </body>
 </html>
