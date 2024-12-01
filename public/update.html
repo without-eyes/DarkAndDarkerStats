@@ -11,7 +11,7 @@
   <input type="text" id="username" name="username" placeholder="Enter your username" required />
 
   <label for="email">Email</label>
-  <input type="email" id="email" name="email" placeholder="Enter your email" required />
+  <input type="email" id="email" name="email" placeholder="Enter your new email" />
 
   <label for="password">New Password</label>
   <input type="password" id="password" name="password" placeholder="Enter new password" />
@@ -25,27 +25,45 @@
   const message = document.getElementById("message");
 
   form.addEventListener("submit", async (e) => {
-    e.preventDefault();
+    e.preventDefault(); // Зупиняємо стандартне надсилання форми
 
-    const formData = {
-      username: form.username.value,
-      email: form.email.value,
-      password: form.password.value,
-    };
+    // Зчитуємо значення
+    const username = document.getElementById('username').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value.trim();
+
+    // Формуємо дані для надсилання
+    const data = { username };
+    if (email) data.email = email; // Додаємо, якщо є email
+    if (password) data.password = password; // Додаємо, якщо є пароль
 
     try {
-      const response = await fetch("/api/user/update", {
-        method: "POST",
+      const response = await fetch("http://localhost:5000/api/user/update", {
+        method: "PATCH", // Використовуємо PATCH для оновлення
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(data), // Надсилаємо JSON
       });
 
-      const result = await response.json();
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error("Error response:", errorText);
+        message.innerHTML = `<div class="error">Error: ${errorText}</div>`;
+      }
 
-      if (response.ok) {
-        message.innerHTML = `<div class="success">Account updated successfully!</div>`;
+      // Перевіряємо відповідь
+      const contentType = response.headers.get("content-type");
+      if (contentType && contentType.includes("application/json")) {
+        const result = await response.json();
+
+        if (response.ok) {
+          message.innerHTML = `<div class="success">Account updated successfully!</div>`;
+        } else {
+          message.innerHTML = `<div class="error">Error: ${result.message}</div>`;
+        }
       } else {
-        message.innerHTML = `<div class="error">Error: ${result.message}</div>`;
+        const text = await response.text();
+        console.error("Unexpected response format:", text);
+        message.innerHTML = `<div class="error">Unexpected response from server</div>`;
       }
     } catch (error) {
       message.innerHTML = `<div class="error">Error: ${error.message}</div>`;

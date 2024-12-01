@@ -116,38 +116,42 @@ def get_user(user_id):
     logger.info(f"User with ID {user_id} fetched successfully")
     return jsonify(user)
 
-@app.route('/api/user/<int:user_id>', methods=['PATCH'])
-def update_user(user_id):
+@app.route('/api/user/update', methods=['PATCH'])
+def update_user():
     data = request.get_json()
+
+    username = data.get('username')
+    email = data.get('email')
+    password = data.get('password')
+
+    if not username:
+        return jsonify({"message": "Username is required"}), 400
+
     connection = None
 
     try:
         connection = get_db_connection()
         cursor = connection.cursor()
 
-        # Збираємо поля для оновлення
+        # Формуємо оновлення динамічно
         updates = []
         values = []
 
-        if 'username' in data:
-            updates.append('username = %s')
-            values.append(data['username'])
-
-        if 'email' in data:
+        if email:
             updates.append('email = %s')
-            values.append(data['email'])
+            values.append(email)
 
-        if 'passwordHash' in data:
+        if password:
             updates.append('passwordHash = %s')
-            values.append(data['passwordHash'])
+            hashed_password = generate_password_hash(password)
+            values.append(hashed_password)
 
         if not updates:
             return jsonify({"message": "No fields to update"}), 400
 
-        values.append(user_id)
+        values.append(username)
 
-        # Формуємо запит
-        query = f"UPDATE users SET {', '.join(updates)} WHERE id = %s"
+        query = f"UPDATE users SET {', '.join(updates)} WHERE username = %s"
         cursor.execute(query, values)
         connection.commit()
 
