@@ -11,14 +11,9 @@
 
 <script>
   async function getMatchHistory() {
+    // Отримання userId з URL параметрів
     const urlParams = new URLSearchParams(window.location.search);
-    const userId = urlParams.get('userId'); // Отримуємо userId з URL
-
-    if (!userId) {
-      console.error('User ID is missing in URL');
-      document.getElementById('matchesList').innerHTML = 'User ID is required.';
-      return;
-    }
+    const userId = urlParams.get('id'); // Отримуємо userId
 
     try {
       const response = await fetch(`http://localhost:5000/api/user/${userId}/matches`);
@@ -27,21 +22,19 @@
       }
       const matches = await response.json();
       const matchesList = document.getElementById('matchesList');
-      matchesList.innerHTML = ''; // Очищаємо "Loading..." текст
-
-      if (matches.length === 0) {
-        matchesList.innerHTML = 'No matches found.';
-        return;
-      }
+      matchesList.innerHTML = '';
 
       matches.forEach(match => {
         const li = document.createElement('li');
-        li.innerHTML = `<a href="match.html?id=${match.id}">Match #${match.id} - ${match.result}</a>`;
+        li.innerHTML = `
+          <a href="match.html?id=${match.match_id}">
+            Match #${match.match_id} - ${match.map} (Kills: ${match.kills}, Escaped: ${match.escaped})
+          </a>
+        `;
         matchesList.appendChild(li);
       });
     } catch (error) {
       console.error('Error fetching match history:', error);
-      document.getElementById('matchesList').innerHTML = 'Error fetching match history.';
     }
   }
 
