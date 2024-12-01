@@ -199,7 +199,9 @@ def get_user_matches(user_id):
     connection = get_db_connection()
     cursor = connection.cursor(dictionary=True)
     cursor.execute('''
-        SELECT m.* FROM matches m
+        SELECT m.id AS match_id, m.start_time, m.end_time, m.map, 
+               um.kills, um.escaped 
+        FROM matches m
         JOIN user_matches um ON m.id = um.match_id
         WHERE um.character_id IN (SELECT id FROM characters WHERE user_id = %s)
     ''', (user_id,))
@@ -213,7 +215,13 @@ def get_user_matches(user_id):
 def get_match(match_id):
     connection = get_db_connection()
     cursor = connection.cursor(dictionary=True)
-    cursor.execute('SELECT * FROM matches WHERE id = %s', (match_id,))
+    cursor.execute('''
+        SELECT m.id AS match_id, m.start_time, m.end_time, m.map,
+               um.kills, um.escaped, um.character_id 
+        FROM matches m
+        JOIN user_matches um ON m.id = um.match_id
+        WHERE m.id = %s
+    ''', (match_id,))
     match = cursor.fetchone()
     cursor.close()
     connection.close()
