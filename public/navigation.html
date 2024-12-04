@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Profile</title>
+  <style>
+    button {
+      margin: 5px;
+      padding: 10px 15px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .button-container {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="button-container">
+  <button onclick="navigateTo('character.html')">Character</button>
+  <button onclick="navigateTo('login.html')">Login</button>
+  <button onclick="navigateTo('match.html')">Match</button>
+  <button onclick="navigateTo('match_history.html')">Match History</button>
+  <button onclick="navigateTo('profile.html')">Profile</button>
+  <button onclick="navigateTo('register.html')">Register</button>
+  <button onclick="navigateTo('update.html')">Update</button>
+</div>
+
+<script>
+  document.getElementById('loginForm').addEventListener('submit', async function (event) {
+    event.preventDefault();
+
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+
+    const data = { email, password };
+
+    try {
+      const response = await fetch('/api/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      });
+
+      // Перевіряємо, чи сервер повертає JSON
+      const contentType = response.headers.get('Content-Type');
+      if (!contentType || !contentType.includes('application/json')) {
+        throw new Error('Expected JSON, but got something else');
+      }
+
+      const result = await response.json();
+      if (response.ok) {
+        alert('Login successful: ' + result.message);
+      } else {
+        alert('Error: ' + result.message);
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      alert('Error: ' + error.message);
+    }
+  });
+
+  function navigateTo(page) {
+    window.location.href = page;
+  }
+
+  window.onload = getUserData;
+</script>
+</body>
+</html>
