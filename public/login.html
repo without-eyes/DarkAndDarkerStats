@@ -4,18 +4,29 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<h1>Login</h1>
-<form id="loginForm">
-    <label for="email">Email:</label><br>
-    <input type="email" id="email" name="email" required><br><br>
+<!-- Top panel -->
+<div class="top-panel">
+    <div class="title">Dark and Darker Stats</div>
+</div>
 
-    <label for="password">Password:</label><br>
-    <input type="password" id="password" name="password" required><br><br>
+<!-- Login Form -->
+<div class="logo-container">
+    <h1>Login</h1>
+    <form id="loginForm" class="form-container">
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
 
-    <button type="submit">Login</button>
-</form>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
+
+        <div class="button-container">
+            <button type="submit">Login</button>
+        </div>
+    </form>
+</div>
 
 <script>
     document.getElementById('loginForm').addEventListener('submit', async function (event) {

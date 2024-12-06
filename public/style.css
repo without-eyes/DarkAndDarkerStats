@@ -1,4 +1,6 @@
 @charset "UTF-8";
+
+/* Load custom font */
 @font-face {
     font-family: 'Kdg-Light';
     src: url('assets/Kdg-Light-b361057e.woff2') format('woff2');
@@ -37,29 +39,71 @@ body {
 }
 
 .logo-container {
-    margin-top: 30vh;
+    margin-top: 10vh;
     text-align: center;
+    background: rgba(0, 0, 0, 0.85);
+    padding: 20px;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
 }
 
-.logo-container img {
-    width: 500px;
-    height: auto;
+h1 {
+    font-size: 36px;
+    margin-bottom: 20px;
+    color: darkgoldenrod;
 }
 
-.description {
-    margin-top: 20px;
-    font-size: 18px;
-    color: #fff;
+.form-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+    align-items: flex-start; /* Вирівнювання форми зліва */
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+}
+
+label {
+    font-size: 20px; /* Збільшений шрифт для підписів */
     text-shadow: 0px 0px 5px rgba(255, 255, 255, 0.3);
-    max-width: 600px;
-    margin-left: auto;
-    margin-right: auto;
+    font-weight: bold;
+    color: darkgoldenrod;
+}
+
+input {
+    padding: 15px;
+    font-size: 18px; /* Збільшений шрифт для тексту в полях */
+    border: 1px solid darkgoldenrod;
+    border-radius: 5px;
+    outline: none;
+    background: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    transition: all 0.3s ease;
+    width: 92%; /* Поля займають всю ширину контейнера */
+}
+
+input::placeholder {
+    color: #aaa;
+    font-style: italic;
+}
+
+input:focus {
+    border-color: goldenrod;
+    box-shadow: 0 0 10px rgba(218, 165, 32, 0.7);
 }
 
 .button-container {
     display: flex;
-    justify-content: center;
+    justify-content: center; /* Кнопка вирівняна зліва */
     gap: 10px;
+    width: 100%;
 }
 
 button {
@@ -67,7 +111,7 @@ button {
     background-size: contain;
     color: #fff;
     border: none;
-    padding: 20px 60px;
+    padding: 15px 60px;
     font-size: 16px;
     font-weight: bold;
     text-transform: uppercase;
@@ -75,7 +119,6 @@ button {
     cursor: pointer;
     border-radius: 10px;
     transition: all 0.3s ease;
-    margin: 0;
 }
 
 button:hover {
