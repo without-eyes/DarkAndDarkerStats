@@ -22,6 +22,28 @@ body {
     overflow: hidden;
 }
 
+.background-container {
+    margin-top: 10vh;
+    text-align: center;
+    background: rgba(0, 0, 0, 0.85);
+    padding: 20px;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+}
+
+.logo-container {
+    margin-top: 30vh;
+    text-align: center;
+    font-size: 20px;
+}
+
+.logo-container img {
+    width: 500px;
+    height: auto;
+}
+
 .top-panel {
     background: rgba(0, 0, 0, 0.85);
     width: 100%;
@@ -36,17 +58,6 @@ body {
     color: darkgoldenrod;
     font-weight: bold;
     margin-left: 20px;
-}
-
-.logo-container {
-    margin-top: 10vh;
-    text-align: center;
-    background: rgba(0, 0, 0, 0.85);
-    padding: 20px;
-    border-radius: 10px;
-    width: 90%;
-    max-width: 500px;
-    box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
 }
 
 h1 {
@@ -72,6 +83,7 @@ h1 {
 
 label {
     font-size: 20px; /* Збільшений шрифт для підписів */
+    text-align: left; /* Вирівнювання тексту зліва */
     text-shadow: 0px 0px 5px rgba(255, 255, 255, 0.3);
     font-weight: bold;
     color: darkgoldenrod;
@@ -101,7 +113,7 @@ input:focus {
 
 .button-container {
     display: flex;
-    justify-content: center; /* Кнопка вирівняна зліва */
+    justify-content: center;
     gap: 10px;
     width: 100%;
 }
