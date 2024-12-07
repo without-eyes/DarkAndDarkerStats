@@ -4,19 +4,33 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>User Profile</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-<h1>User Profile</h1>
-<div id="userInfo">
-  <p><strong>Username:</strong> <span id="username">Loading...</span></p>
-  <p><strong>Email:</strong> <span id="email">Loading...</span></p>
-  <p><strong>Registered Since:</strong> <span id="registeredSince">Loading...</span></p>
-  <button id="viewMatchesButton" style="display:none;">View My Matches</button>
-  <button id="viewCharactersButton" style="display:none;">View My Characters</button>
-</div>
+<div class="background-container">
+  <h1>User Profile</h1>
+  <div id="userInfo" class="form-container">
+    <div class="input-group">
+      <label for="username"><strong>Username:</strong></label>
+      <span id="username">Loading...</span>
+    </div>
+    <div class="input-group">
+      <label for="email"><strong>Email:</strong></label>
+      <span id="email">Loading...</span>
+    </div>
+    <div class="input-group">
+      <label for="registeredSince"><strong>Registered Since:</strong></label>
+      <span id="registeredSince">Loading...</span>
+    </div>
+    <div class="button-container">
+      <button id="viewMatchesButton" style="display:none;">View My Matches</button>
+      <button id="viewCharactersButton" style="display:none;">View My Characters</button>
+    </div>
+  </div>
 
-<h2>Your Characters</h2>
-<ul id="charactersList">Loading...</ul>
+  <h2>Your Characters</h2>
+  <ul id="charactersList">Loading...</ul>
+</div>
 
 <script>
   async function getUserData() {
