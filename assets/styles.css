@@ -1,6 +1,5 @@
 @charset "UTF-8";
 
-/* Load custom font */
 @font-face {
     font-family: 'Kdg-Light';
     src: url('Kdg-Light-b361057e.woff2') format('woff2');
@@ -71,7 +70,7 @@ h1 {
     flex-direction: column;
     gap: 20px;
     width: 100%;
-    align-items: flex-start; /* Вирівнювання форми зліва */
+    align-items: flex-start;
 }
 
 .input-group {
@@ -82,8 +81,8 @@ h1 {
 }
 
 label {
-    font-size: 20px; /* Збільшений шрифт для підписів */
-    text-align: left; /* Вирівнювання тексту зліва */
+    font-size: 20px;
+    text-align: left;
     text-shadow: 0px 0px 5px rgba(255, 255, 255, 0.3);
     font-weight: bold;
     color: darkgoldenrod;
@@ -91,14 +90,14 @@ label {
 
 input {
     padding: 15px;
-    font-size: 18px; /* Збільшений шрифт для тексту в полях */
+    font-size: 18px;
     border: 1px solid darkgoldenrod;
     border-radius: 5px;
     outline: none;
     background: rgba(0, 0, 0, 0.8);
     color: #fff;
     transition: all 0.3s ease;
-    width: 92%; /* Поля займають всю ширину контейнера */
+    width: 92%;
 }
 
 input::placeholder {
