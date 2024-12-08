@@ -1,35 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Account Settings</title>
-  <link rel="stylesheet" href="../assets/styles.css">
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Account Settings</title>
+    <link href="../assets/styles.css" rel="stylesheet">
 </head>
 <body>
 <div class="top-panel">
-  <div class="title">Dark and Darker Stats</div>
+    <div class="title">Dark and Darker Stats</div>
 </div>
 <div class="background-container">
-  <form id="accountForm" class="form-container">
-    <h1>Account Settings</h1>
-    <div class="input-group">
-      <label for="username">Username</label>
-      <input type="text" id="username" name="username" placeholder="Enter your username" required />
-    </div>
-    <div class="input-group">
-      <label for="email">Email</label>
-      <input type="email" id="email" name="email" placeholder="Enter your new email" />
-    </div>
-    <div class="input-group">
-      <label for="password">New Password</label>
-      <input type="password" id="password" name="password" placeholder="Enter new password" />
-    </div>
-    <div class="button-container">
-      <button type="submit">Update</button>
-    </div>
-    <div id="message"></div>
-  </form>
+    <form class="form-container" id="accountForm">
+        <h1>Account Settings</h1>
+        <div class="input-group">
+            <label for="username">Username</label>
+            <input id="username" name="username" placeholder="Enter your username" required type="text"/>
+        </div>
+        <div class="input-group">
+            <label for="email">Email</label>
+            <input id="email" name="email" placeholder="Enter your new email" type="email"/>
+        </div>
+        <div class="input-group">
+            <label for="password">New Password</label>
+            <input id="password" name="password" placeholder="Enter new password" type="password"/>
+        </div>
+        <div class="button-container">
+            <button type="submit">Update</button>
+        </div>
+        <div id="message"></div>
+    </form>
 </div>
 <script src="../scripts.js"></script>
 </body>

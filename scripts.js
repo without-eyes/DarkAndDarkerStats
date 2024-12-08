@@ -1,5 +1,4 @@
 document.addEventListener("DOMContentLoaded", () => {
-    // Форма оновлення акаунту
     const form = document.getElementById("accountForm");
     const message = document.getElementById("message");
 
@@ -10,14 +9,14 @@ document.addEventListener("DOMContentLoaded", () => {
             const username = document.getElementById('username').value.trim();
             const email = document.getElementById('email').value.trim();
             const password = document.getElementById('password').value.trim();
-            const data = { username };
+            const data = {username};
             if (email) data.email = email;
             if (password) data.password = password;
 
             try {
                 const response = await fetch("http://localhost:5000/api/user/update", {
                     method: "PATCH",
-                    headers: { "Content-Type": "application/json" },
+                    headers: {"Content-Type": "application/json"},
                     body: JSON.stringify(data),
                 });
 
@@ -42,7 +41,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // Деталі персонажа
     async function getCharacterDetails() {
         const urlParams = new URLSearchParams(window.location.search);
         const characterId = urlParams.get('id');
@@ -65,12 +63,10 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // Навігація
     function navigateTo(page) {
         window.location.href = page;
     }
 
-    // Логін
     const loginForm = document.getElementById('loginForm');
     if (loginForm) {
         loginForm.addEventListener('submit', async function (event) {
@@ -82,8 +78,8 @@ document.addEventListener("DOMContentLoaded", () => {
             try {
                 const response = await fetch('/api/login', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email, password }),
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({email, password}),
                 });
 
                 if (response.ok) {
@@ -99,7 +95,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // Деталі матчу
     async function getMatchDetails() {
         const urlParams = new URLSearchParams(window.location.search);
         const matchId = urlParams.get('id');
@@ -118,7 +113,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // Історія матчів
     async function getMatchHistory() {
         const urlParams = new URLSearchParams(window.location.search);
         const userId = urlParams.get('id');
@@ -140,7 +134,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // Дані користувача
     async function getUserData() {
         const urlParams = new URLSearchParams(window.location.search);
         const userId = urlParams.get('id');
@@ -173,7 +166,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // Реєстрація
     const registerForm = document.getElementById('registerForm');
     if (registerForm) {
         registerForm.addEventListener('submit', async function (event) {
@@ -192,8 +184,8 @@ document.addEventListener("DOMContentLoaded", () => {
             try {
                 const response = await fetch('http://localhost:5000/api/register', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ username, email, password }),
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({username, email, password}),
                 });
 
                 if (response.ok) {

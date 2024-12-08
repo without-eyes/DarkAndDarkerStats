@@ -1,9 +1,11 @@
 import logging
-from flask import Flask, jsonify, request
+
 import mysql.connector
+from flask import Flask, jsonify, request
 from flask_cors import CORS
 from mysql.connector import Error
 from werkzeug.security import generate_password_hash, check_password_hash
+
 import config
 
 app = Flask(__name__)
@@ -19,6 +21,7 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+
 def get_db_connection():
     try:
         connection = mysql.connector.connect(
@@ -32,6 +35,7 @@ def get_db_connection():
     except Error as e:
         logger.error(f"Database connection failed: {e}")
         raise
+
 
 @app.route('/api/register', methods=['POST'])
 def register_user():
@@ -73,6 +77,7 @@ def register_user():
 
     return jsonify({"message": "User registered successfully"}), 201
 
+
 @app.route('/api/login', methods=['POST'])
 def login_user():
     data = request.get_json()
@@ -99,6 +104,7 @@ def login_user():
     logger.info(f"User {email} logged in successfully")
     return jsonify({"message": "Login successful"}), 200
 
+
 @app.route('/api/user/<int:user_id>', methods=['GET'])
 def get_user(user_id):
     logger.info(f"Fetching user with ID {user_id}")
@@ -115,6 +121,7 @@ def get_user(user_id):
 
     logger.info(f"User with ID {user_id} fetched successfully")
     return jsonify(user)
+
 
 @app.route('/api/user/update', methods=['PATCH'])
 def update_user():
@@ -169,6 +176,7 @@ def update_user():
             cursor.close()
             connection.close()
 
+
 @app.route('/api/user/<int:user_id>/characters', methods=['GET'])
 def get_user_characters(user_id):
     connection = get_db_connection()
@@ -179,6 +187,7 @@ def get_user_characters(user_id):
     connection.close()
 
     return jsonify(characters)
+
 
 @app.route('/api/user/<int:user_id>/characters/<int:character_id>', methods=['GET'])
 def get_character(user_id, character_id):
@@ -193,6 +202,7 @@ def get_character(user_id, character_id):
         return jsonify({"message": "Character not found"}), 404
 
     return jsonify(character)
+
 
 @app.route('/api/user/<int:user_id>/matches', methods=['GET'])
 def get_user_matches(user_id):
@@ -210,6 +220,7 @@ def get_user_matches(user_id):
     connection.close()
 
     return jsonify(matches)
+
 
 @app.route('/api/match/<int:match_id>', methods=['GET'])
 def get_match(match_id):
@@ -230,6 +241,7 @@ def get_match(match_id):
         return jsonify({"message": "Match not found"}), 404
 
     return jsonify(match)
+
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)

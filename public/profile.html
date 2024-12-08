@@ -1,35 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>User Profile</title>
-  <link rel="stylesheet" href="../assets/styles.css">
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>User Profile</title>
+    <link href="../assets/styles.css" rel="stylesheet">
 </head>
 <body>
 <div class="background-container">
-  <h1>User Profile</h1>
-  <div id="userInfo" class="form-container">
-    <div class="input-group">
-      <label for="username"><strong>Username:</strong></label>
-      <span id="username">Loading...</span>
+    <h1>User Profile</h1>
+    <div class="form-container" id="userInfo">
+        <div class="input-group">
+            <label for="username"><strong>Username:</strong></label>
+            <span id="username">Loading...</span>
+        </div>
+        <div class="input-group">
+            <label for="email"><strong>Email:</strong></label>
+            <span id="email">Loading...</span>
+        </div>
+        <div class="input-group">
+            <label for="registeredSince"><strong>Registered Since:</strong></label>
+            <span id="registeredSince">Loading...</span>
+        </div>
+        <div class="button-container">
+            <button id="viewMatchesButton" style="display:none;">View My Matches</button>
+            <button id="viewCharactersButton" style="display:none;">View My Characters</button>
+        </div>
     </div>
-    <div class="input-group">
-      <label for="email"><strong>Email:</strong></label>
-      <span id="email">Loading...</span>
-    </div>
-    <div class="input-group">
-      <label for="registeredSince"><strong>Registered Since:</strong></label>
-      <span id="registeredSince">Loading...</span>
-    </div>
-    <div class="button-container">
-      <button id="viewMatchesButton" style="display:none;">View My Matches</button>
-      <button id="viewCharactersButton" style="display:none;">View My Characters</button>
-    </div>
-  </div>
 
-  <h2>Your Characters</h2>
-  <ul id="charactersList">Loading...</ul>
+    <h2>Your Characters</h2>
+    <ul id="charactersList">Loading...</ul>
 </div>
 <script src="../scripts.js"></script>
 </body>
