@@ -3,7 +3,7 @@
 /* Load custom font */
 @font-face {
     font-family: 'Kdg-Light';
-    src: url('assets/Kdg-Light-b361057e.woff2') format('woff2');
+    src: url('Kdg-Light-b361057e.woff2') format('woff2');
     font-weight: normal;
     font-style: normal;
 }
@@ -11,7 +11,7 @@
 body {
     margin: 0;
     font-family: 'Kdg-Light', serif;
-    background: #000 url('assets/og_img_2.jpg') no-repeat center center;
+    background: #000 url('og_img_2.jpg') no-repeat center center;
     background-size: cover;
     color: #fff;
     display: flex;
@@ -119,7 +119,7 @@ input:focus {
 }
 
 button {
-    background: url('assets/yellow-md-btn.svg') no-repeat center center;
+    background: url('yellow-md-btn.svg') no-repeat center center;
     background-size: contain;
     color: #fff;
     border: none;
