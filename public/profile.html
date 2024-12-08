@@ -31,67 +31,6 @@
   <h2>Your Characters</h2>
   <ul id="charactersList">Loading...</ul>
 </div>
-
-<script>
-  async function getUserData() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const userId = urlParams.get('id');
-
-    if (!userId) {
-      console.error('User ID is missing in URL');
-      document.getElementById('userInfo').innerHTML = 'User ID is required.';
-      return;
-    }
-
-    try {
-      // Fetch user information
-      const userResponse = await fetch(`http://localhost:5000/api/user/${userId}`);
-      if (!userResponse.ok) {
-        throw new Error('Failed to fetch user data');
-      }
-      const user = await userResponse.json();
-      document.getElementById('username').textContent = user.username;
-      document.getElementById('email').textContent = user.email;
-      document.getElementById('registeredSince').textContent = user.registered_since;
-
-      // Show buttons
-      document.getElementById('viewMatchesButton').style.display = 'inline';
-      document.getElementById('viewCharactersButton').style.display = 'inline';
-
-      // Add button event listeners
-      document.getElementById('viewMatchesButton').addEventListener('click', () => {
-        window.location.href = `matches.html?id=${userId}`;
-      });
-      document.getElementById('viewCharactersButton').addEventListener('click', () => {
-        window.location.href = `characters.html?id=${userId}`;
-      });
-
-      // Fetch characters
-      const charactersResponse = await fetch(`http://localhost:5000/api/user/${userId}/characters`);
-      if (!charactersResponse.ok) {
-        throw new Error('Failed to fetch characters');
-      }
-      const characters = await charactersResponse.json();
-      const charactersList = document.getElementById('charactersList');
-      charactersList.innerHTML = ''; // Clear the "Loading..." text
-
-      if (characters.length === 0) {
-        charactersList.innerHTML = 'No characters found.';
-        return;
-      }
-
-      characters.forEach(character => {
-        const li = document.createElement('li');
-        li.innerHTML = `<a href="character.html?id=${character.id}">${character.name} - Level ${character.level}</a>`;
-        charactersList.appendChild(li);
-      });
-    } catch (error) {
-      console.error('Error fetching user data:', error);
-      document.getElementById('userInfo').innerHTML = 'Error fetching user data.';
-    }
-  }
-
-  window.onload = getUserData;
-</script>
+<script src="../scripts.js"></script>
 </body>
 </html>
