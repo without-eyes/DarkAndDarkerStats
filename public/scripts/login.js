@@ -15,7 +15,7 @@ if (loginForm) {
 
             if (response.ok) {
                 const result = await response.json();
-                window.location.href = `profile.html?id=${result.userId}`;
+                window.location.href = `profile.html?id=${result.id}`;
             } else {
                 const result = await response.json();
                 alert('Error: ' + result.message);

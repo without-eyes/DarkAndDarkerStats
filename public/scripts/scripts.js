@@ -113,38 +113,6 @@ async function getMatchHistory() {
     }
 }
 
-async function getUserData() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const userId = urlParams.get('id');
-
-    if (!userId) {
-        console.error('User ID is missing in URL');
-        return;
-    }
-
-    try {
-        const userResponse = await fetch(`http://localhost:5000/api/user/${userId}`);
-        if (!userResponse.ok) throw new Error('Failed to fetch user data');
-        const user = await userResponse.json();
-        document.getElementById('username').textContent = user.username;
-        document.getElementById('email').textContent = user.email;
-
-        const charactersResponse = await fetch(`http://localhost:5000/api/user/${userId}/characters`);
-        if (!charactersResponse.ok) throw new Error('Failed to fetch characters');
-        const characters = await charactersResponse.json();
-        const charactersList = document.getElementById('charactersList');
-        charactersList.innerHTML = '';
-
-        characters.forEach(character => {
-            const li = document.createElement('li');
-            li.innerHTML = `<a href="character.html?id=${character.id}">${character.name}</a>`;
-            charactersList.appendChild(li);
-        });
-    } catch (error) {
-        console.error('Error fetching user data:', error);
-    }
-}
-
 const registerForm = document.getElementById('registerForm');
 if (registerForm) {
     registerForm.addEventListener('submit', async function (event) {

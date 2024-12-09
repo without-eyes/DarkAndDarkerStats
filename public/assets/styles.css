@@ -32,6 +32,15 @@ body {
     box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
 }
 
+.container-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 20px;
+    width: 100%;
+}
+
 .logo-container {
     margin-top: 30vh;
     text-align: center;
@@ -118,7 +127,7 @@ input:focus {
 }
 
 button {
-    background: url('yellow-md-btn.svg') no-repeat center center;
+    background: url('yellow-sm-btn.svg') no-repeat center center;
     background-size: contain;
     color: #fff;
     border: none;
@@ -130,6 +139,7 @@ button {
     cursor: pointer;
     border-radius: 10px;
     transition: all 0.3s ease;
+    white-space: nowrap;
 }
 
 button:hover {
