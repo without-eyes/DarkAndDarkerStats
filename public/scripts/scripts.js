@@ -1,64 +1,72 @@
-const form = document.getElementById("accountForm");
-const message = document.getElementById("message");
+{ // character.html
+    document.addEventListener("DOMContentLoaded", async () => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const characterId = urlParams.get('id');
+        const userId = urlParams.get('userId');
 
-if (form) {
-    form.addEventListener("submit", async (e) => {
-        e.preventDefault();
-
-        const username = document.getElementById('username').value.trim();
-        const email = document.getElementById('email').value.trim();
-        const password = document.getElementById('password').value.trim();
-        const data = {username};
-        if (email) data.email = email;
-        if (password) data.password = password;
+        if (!characterId || !userId) {
+            console.error('Character ID або User ID відсутні в URL');
+            document.getElementById('characterName').textContent = 'Character not found';
+            return;
+        }
 
         try {
-            const response = await fetch("http://localhost:5000/api/user/update", {
-                method: "PATCH",
-                headers: {"Content-Type": "application/json"},
-                body: JSON.stringify(data),
-            });
-
-            if (!response.ok) {
-                const errorText = await response.text();
-                message.innerHTML = `<div class="error">Error: ${errorText}</div>`;
-                return;
-            }
-
-            const contentType = response.headers.get("content-type");
-            if (contentType && contentType.includes("application/json")) {
-                const result = await response.json();
-                message.innerHTML = response.ok
-                    ? `<div class="success">Account updated successfully!</div>`
-                    : `<div class="error">Error: ${result.message}</div>`;
-            } else {
-                message.innerHTML = `<div class="error">Unexpected response from server</div>`;
-            }
+            const response = await fetch(`http://localhost:5000/api/user/${userId}/characters/${characterId}`);
+            if (!response.ok) throw new Error('Не вдалося отримати дані персонажа');
+            const character = await response.json();
+            document.getElementById('characterName').textContent = character.name || 'Unknown Name';
+            document.getElementById('characterLevel').textContent = `Level: ${character.level || 'N/A'}`;
+            document.getElementById('characterClass').textContent = `Class: ${character.class || 'N/A'}`;
         } catch (error) {
-            message.innerHTML = `<div class="error">Error: ${error.message}</div>`;
+            console.error('Помилка завантаження даних персонажа:', error);
+            document.getElementById('characterName').textContent = 'Error loading character details';
         }
     });
 }
 
-async function getCharacterDetails() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const characterId = urlParams.get('id');
-    const userId = urlParams.get('userId');
 
-    if (!characterId || !userId) {
-        console.error('Character ID or User ID is missing in URL');
-        return;
-    }
 
-    try {
-        const response = await fetch(`http://localhost:5000/api/user/${userId}/characters/${characterId}`);
-        if (!response.ok) throw new Error('Failed to fetch character details');
-        const character = await response.json();
-        document.getElementById('characterName').textContent = character.name;
-        document.getElementById('characterLevel').textContent = `Level: ${character.level}`;
-        document.getElementById('characterClass').textContent = `Class: ${character.class}`;
-    } catch (error) {
-        console.error('Error fetching character details:', error);
+{
+    const form = document.getElementById("accountForm");
+    const message = document.getElementById("message");
+
+    if (form) {
+        form.addEventListener("submit", async (e) => {
+            e.preventDefault();
+
+            const username = document.getElementById('username').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value.trim();
+            const data = {username};
+            if (email) data.email = email;
+            if (password) data.password = password;
+
+            try {
+                const response = await fetch("http://localhost:5000/api/user/update", {
+                    method: "PATCH",
+                    headers: {"Content-Type": "application/json"},
+                    body: JSON.stringify(data),
+                });
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    message.innerHTML = `<div class="error">Error: ${errorText}</div>`;
+                    return;
+                }
+
+                const contentType = response.headers.get("content-type");
+                if (contentType && contentType.includes("application/json")) {
+                    const result = await response.json();
+                    message.innerHTML = response.ok
+                        ? `<div class="success">Account updated successfully!</div>`
+                        : `<div class="error">Error: ${result.message}</div>`;
+                } else {
+                    message.innerHTML = `<div class="error">Unexpected response from server</div>`;
+                }
+            } catch (error) {
+                message.innerHTML = `<div class="error">Error: ${error.message}</div>`;
+            }
+        });
     }
 }
 
