@@ -146,3 +146,24 @@ button:hover {
     transform: scale(1.05);
     opacity: 0.9;
 }
+
+.account-info {
+    margin-top: 20px;
+    width: 100%;
+    text-align: left;
+}
+
+.info-item {
+    margin-bottom: 15px;
+    font-size: 18px;
+}
+
+.info-label {
+    font-weight: bold;
+    color: darkgoldenrod;
+    margin-right: 10px;
+}
+
+.info-value {
+    color: #fff;
+}

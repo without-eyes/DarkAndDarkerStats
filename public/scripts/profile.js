@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             document.getElementById('username').textContent = user.username || 'Unknown';
             document.getElementById('email').textContent = user.email || 'Unknown';
-            document.getElementById('registeredSince').textContent = user.created_at || 'Unknown';
+            document.getElementById('member-since').textContent = user.created_at || 'Unknown';
 
             const charactersResponse = await fetch(`http://localhost:5000/api/user/${userId}/characters`);
             if (!charactersResponse.ok) throw new Error(`Failed to fetch characters: ${charactersResponse.status}`);
