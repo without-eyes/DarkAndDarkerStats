@@ -102,7 +102,7 @@ def login_user():
         return jsonify({"message": "Invalid email or password"}), 401
 
     logger.info(f"User {email} logged in successfully")
-    return jsonify({"message": "Login successful"}), 200
+    return jsonify({"id": user['id']}), 200
 
 
 @app.route('/api/user/<int:user_id>', methods=['GET'])

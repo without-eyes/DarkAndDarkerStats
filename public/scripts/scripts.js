@@ -74,34 +74,6 @@ function navigateTo(page) {
     window.location.href = page;
 }
 
-const loginForm = document.getElementById('loginForm');
-if (loginForm) {
-    loginForm.addEventListener('submit', async function (event) {
-        event.preventDefault();
-
-        const email = document.getElementById('email').value;
-        const password = document.getElementById('password').value;
-
-        try {
-            const response = await fetch('/api/login', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({email, password}),
-            });
-
-            if (response.ok) {
-                window.location.href = 'index.html';
-            } else {
-                const result = await response.json();
-                alert('Error: ' + result.message);
-            }
-        } catch (error) {
-            console.error('Error:', error);
-            alert('Error: ' + error.message);
-        }
-    });
-}
-
 async function getMatchDetails() {
     const urlParams = new URLSearchParams(window.location.search);
     const matchId = urlParams.get('id');

@@ -7,7 +7,7 @@ const PORT = 3000;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use(express.static(path.join(__dirname, '../public')));
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.post('/api/register', (req, res) => {
     const { username, email, password, confirm_password } = req.body;
