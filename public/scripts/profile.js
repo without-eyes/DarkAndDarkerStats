@@ -60,3 +60,14 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     await getUserData();
 });
+
+const urlParams = new URLSearchParams(window.location.search);
+const userId = urlParams.get('id');
+if (userId) {
+    const matchHistoryButton = document.getElementById('matchHistoryButton');
+    matchHistoryButton.onclick = () => {
+        location.href = `./match_history.html?id=${userId}`;
+    };
+} else {
+    console.error("User ID is missing in the URL");
+}
