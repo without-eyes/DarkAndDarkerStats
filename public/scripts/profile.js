@@ -23,11 +23,17 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             const charactersList = document.getElementById('charactersList');
             charactersList.innerHTML = '';
-            characters.forEach(character => {
+            characters.slice(0, 5).forEach(character => {
                 const li = document.createElement('li');
                 li.innerHTML = `<a href="character.html?id=${character.id}">${character.name}</a>`;
                 charactersList.appendChild(li);
             });
+
+            if (characters.length > 5) {
+                const li = document.createElement('li');
+                li.innerHTML = `<a>...</a>`;
+                charactersList.appendChild(li);
+            }
 
             const matchesResponse = await fetch(`http://localhost:5000/api/user/${userId}/matches`);
             if (!matchesResponse.ok) throw new Error(`Failed to fetch match history: ${matchesResponse.status}`);
@@ -35,12 +41,17 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             const matchesList = document.getElementById('matchesList');
             matchesList.innerHTML = '';
-
-            matches.forEach(match => {
+            matches.slice(0, 5).forEach(match => {
                 const li = document.createElement('li');
                 li.innerHTML = `<a href="match.html?id=${match.match_id}">Match #${match.match_id} - ${match.map}</a>`;
                 matchesList.appendChild(li);
             });
+
+            if (matches.length > 5) {
+                const li = document.createElement('li');
+                li.innerHTML = `<a>...</a>`;
+                matchesList.appendChild(li);
+            }
         } catch (error) {
             console.error('Error fetching user data:', error);
             alert('Error loading data. Please try again later.');
