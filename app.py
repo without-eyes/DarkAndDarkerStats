@@ -43,15 +43,10 @@ def register_user():
     username = data.get('username')
     email = data.get('email')
     password = data.get('password')
-    confirm_password = data.get('confirm_password')
 
-    if not all([username, email, password, confirm_password]):
+    if not all([username, email, password]):
         logger.warning("Registration failed: missing fields")
         return jsonify({"message": "All fields are required"}), 400
-
-    if password != confirm_password:
-        logger.warning("Registration failed: passwords do not match")
-        return jsonify({"message": "Passwords do not match"}), 400
 
     hashed_password = generate_password_hash(password)
 
