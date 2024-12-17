@@ -68,6 +68,16 @@ if (userId) {
     matchHistoryButton.onclick = () => {
         location.href = `./match_history.html?id=${userId}`;
     };
+
+    const updateButton = document.getElementById('updateButton');
+    updateButton.onclick = () => {
+        location.href = `./update.html?id=${userId}`;
+    };
+
+    const charactersButton = document.getElementById('charactersButton');
+    charactersButton.onclick = () => {
+        location.href = `./characters.html?id=${userId}`;
+    };
 } else {
     console.error("User ID is missing in the URL");
 }
