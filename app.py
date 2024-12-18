@@ -209,6 +209,26 @@ def add_character(user_id):
         cursor.close()
         connection.close()
 
+@app.route('/api/user/<int:user_id>/characters/delete/<int:character_id>', methods=['DELETE'])
+def delete_character(user_id, character_id):
+    connection = get_db_connection()
+    cursor = connection.cursor()
+
+    try:
+        cursor.execute(
+            "DELETE FROM characters WHERE user_id = %s AND id = %s",
+            (user_id, character_id)
+        )
+        connection.commit()
+
+        if cursor.rowcount == 0:
+            return jsonify({"message": "Character not found"}), 404
+
+        return jsonify({"message": "Character deleted successfully"}), 200
+    finally:
+        cursor.close()
+        connection.close()
+
 @app.route('/api/user/<int:user_id>/matches', methods=['GET'])
 def get_user_matches(user_id):
     connection = get_db_connection()

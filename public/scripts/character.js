@@ -21,4 +21,20 @@ document.addEventListener("DOMContentLoaded", async () => {
         console.error('Помилка завантаження даних персонажа:', error);
         document.getElementById('characterName').textContent = 'Error loading character details';
     }
+
+    const deleteButton = document.getElementById('deleteButton');
+    deleteButton.addEventListener('click', async () => {
+        if (confirm('Are you sure you want to delete this character?')) {
+            try {
+                const deleteResponse = await fetch(`http://localhost:5000/api/user/${userId}/characters/delete/${characterId}`, {
+                    method: 'DELETE',
+                });
+
+                if (!deleteResponse.ok) throw new Error('Не вдалося видалити персонажа');
+                window.location.href = `./characters.html?id=${userId}`;
+            } catch (error) {
+                console.error('Failed to delete the character:', error);
+            }
+        }
+    });
 });
