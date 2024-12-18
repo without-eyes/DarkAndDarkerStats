@@ -1,5 +1,3 @@
-import { navigateTo } from "./common.js";
-
 const form = document.getElementById("accountForm");
 
 const urlParams = new URLSearchParams(window.location.search);
@@ -25,7 +23,7 @@ if (form) {
 
             const result = await response.json();
             if (response.ok) {
-                navigateTo(`../profile.html?id=${userId}`)
+                window.location.href = `../profile.html?id=${userId}`;
             } else {
                 alert('Error: ' + result.message);
             }

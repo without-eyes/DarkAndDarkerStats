@@ -1,3 +1,3 @@
-export function navigateTo(page) {
+function navigateTo(page) {
     window.location.href = page;
 }
