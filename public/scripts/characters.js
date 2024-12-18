@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         const charactersList = document.getElementById('charactersList');
         charactersList.innerHTML = '';
-        characters.slice(0, 5).forEach(character => {
+        characters.forEach(character => {
             const li = document.createElement('li');
             li.innerHTML = `<a href="character.html?userId=${userId}&id=${character.id}">${character.name}</a>`;
             charactersList.appendChild(li);
