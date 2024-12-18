@@ -1,5 +1,6 @@
+import { navigateTo } from "./common.js";
+
 const form = document.getElementById("accountForm");
-const message = document.getElementById("message");
 
 const urlParams = new URLSearchParams(window.location.search);
 const userId = urlParams.get('id');
@@ -24,12 +25,12 @@ if (form) {
 
             const result = await response.json();
             if (response.ok) {
-                message.innerHTML = `<div class="success">Account updated successfully!</div>`;
+                navigateTo(`../profile.html?id=${userId}`)
             } else {
-                message.innerHTML = `<div class="error">Error: ${result.message}</div>`;
+                alert('Error: ' + result.message);
             }
         } catch (error) {
-            message.innerHTML = `<div class="error">Error: ${error.message}</div>`;
+            alert('Error: ' + error.message);
         }
     });
 }
