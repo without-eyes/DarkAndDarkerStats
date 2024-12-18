@@ -184,6 +184,31 @@ def get_character(user_id, character_id):
 
     return jsonify(character)
 
+@app.route('/api/user/<int:user_id>/characters/add', methods=['POST'])
+def add_character(user_id):
+    data = request.json
+    name = data.get('name')
+    char_class = data.get('class')
+    level = data.get('level', 1)
+
+    if not name or not char_class:
+        return jsonify({"message": "Name and class are required"}), 400
+
+    connection = get_db_connection()
+    cursor = connection.cursor()
+
+    try:
+        cursor.execute(
+            "INSERT INTO characters (user_id, name, class, level) VALUES (%s, %s, %s, %s)",
+            (user_id, name, char_class, level)
+        )
+        connection.commit()
+        character_id = cursor.lastrowid
+        return jsonify({"message": "Character created successfully", "character_id": character_id}), 201
+    finally:
+        cursor.close()
+        connection.close()
+
 @app.route('/api/user/<int:user_id>/matches', methods=['GET'])
 def get_user_matches(user_id):
     connection = get_db_connection()

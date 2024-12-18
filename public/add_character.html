@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add Character</title>
+  <link rel="icon" href="./assets/favicon.ico" type="image/x-icon">
+  <link href="assets/styles.css" rel="stylesheet">
+</head>
+<body>
+<div class="top-panel">
+  <div class="title">Dark and Darker Stats</div>
+</div>
+<div class="background-container">
+  <form class="form-container" id="addCharacterForm">
+    <h1>Add New Character</h1>
+    <div class="input-group">
+      <label for="characterName">Character Name</label>
+      <input id="characterName" name="characterName" placeholder="Enter character name" type="text" required />
+    </div>
+    <div class="input-group">
+      <label for="characterClass">Character Class</label>
+      <select id="characterClass" name="characterClass" required>
+        <option value="" disabled selected>Select a class</option>
+        <option value="Fighter">Fighter</option>
+        <option value="Barbarian">Barbarian</option>
+        <option value="Rogue">Rogue</option>
+        <option value="Ranger">Ranger</option>
+        <option value="Wizard">Wizard</option>
+        <option value="Cleric">Cleric</option>
+        <option value="Bard">Bard</option>
+        <option value="Warlock">Warlock</option>
+        <option value="Druid">Druid</option>
+        <option value="Sorcerer">Sorcerer</option>
+      </select>
+    </div>
+    <div class="input-group">
+      <label for="characterLevel">Character Level</label>
+      <input id="characterLevel" name="characterLevel" placeholder="Enter character level" type="number" min="1" value="1" required />
+    </div>
+    <div class="button-container">
+      <button type="submit">Add Character</button>
+    </div>
+  </form>
+</div>
+<script type="module" src="scripts/add_character.js"></script>
+</body>
+</html>

@@ -18,3 +18,14 @@ document.addEventListener("DOMContentLoaded", async () => {
         console.error('Error fetching characters:', error);
     }
 });
+
+const urlParams = new URLSearchParams(window.location.search);
+const userId = urlParams.get('id');
+if (userId) {
+    const addCharacterButton = document.getElementById('addCharacterButton');
+    addCharacterButton.onclick = () => {
+        location.href = `./add_character.html?id=${userId}`;
+    };
+} else {
+    console.error("User ID is missing in the URL");
+}

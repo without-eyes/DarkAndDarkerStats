@@ -167,3 +167,26 @@ button:hover {
 .info-value {
     color: #fff;
 }
+
+select {
+    padding: 15px;
+    font-size: 18px;
+    border: 1px solid darkgoldenrod;
+    border-radius: 5px;
+    outline: none;
+    background: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    transition: all 0.3s ease;
+    width: 100%;
+    appearance: none; /* Прибирає стандартний стиль */
+}
+
+select:focus {
+    border-color: goldenrod;
+    box-shadow: 0 0 10px rgba(218, 165, 32, 0.7);
+}
+
+option {
+    background: #000;
+    color: #fff;
+}
