@@ -17,7 +17,7 @@ document.getElementById('addUserMatchForm').addEventListener('submit', async (ev
     };
 
     try {
-        const response = await fetch(`http://localhost:5000/api/user/${userId}/matches/add`, {
+        const response = await fetch(`http://localhost:5000/api/user/${userId}/matches`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

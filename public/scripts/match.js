@@ -16,3 +16,19 @@ document.addEventListener("DOMContentLoaded", async () => {
         document.getElementById('matchId').textContent = 'Error fetching match details';
     }
 });
+
+const urlParams = new URLSearchParams(window.location.search);
+const userId = urlParams.get('id');
+if (userId) {
+    const deleteMatch = document.getElementById('deleteMatch');
+    deleteMatch.onclick = () => {
+
+    };
+
+    const deleteUserFromMatch = document.getElementById('deleteUserFromMatch');
+    deleteUserFromMatch.onclick = () => {
+
+    };
+} else {
+    console.error("User ID is missing in the URL");
+}

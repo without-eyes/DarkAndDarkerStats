@@ -15,7 +15,7 @@ if (form) {
         if (password) data.password = password;
 
         try {
-            const response = await fetch(`http://localhost:5000/api/user/update/${userId}`, {
+            const response = await fetch(`http://localhost:5000/api/user/${userId}`, {
                 method: "PATCH",
                 headers: {"Content-Type": "application/json"},
                 body: JSON.stringify(data),

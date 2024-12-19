@@ -113,7 +113,7 @@ def get_user(user_id):
     logger.info(f"User with ID {user_id} fetched successfully")
     return jsonify(user)
 
-@app.route('/api/user/update/<int:user_id>', methods=['PATCH'])
+@app.route('/api/user/<int:user_id>', methods=['PATCH'])
 def update_user(user_id):
     data = request.get_json()
     email = data.get('email')
@@ -184,7 +184,7 @@ def get_character(user_id, character_id):
 
     return jsonify(character)
 
-@app.route('/api/user/<int:user_id>/characters/add', methods=['POST'])
+@app.route('/api/user/<int:user_id>/characters', methods=['POST'])
 def add_character(user_id):
     data = request.json
     name = data.get('name')
@@ -209,7 +209,7 @@ def add_character(user_id):
         cursor.close()
         connection.close()
 
-@app.route('/api/user/<int:user_id>/characters/delete/<int:character_id>', methods=['DELETE'])
+@app.route('/api/user/<int:user_id>/characters/<int:character_id>', methods=['DELETE'])
 def delete_character(user_id, character_id):
     connection = get_db_connection()
     cursor = connection.cursor()
@@ -246,7 +246,7 @@ def get_user_matches(user_id):
 
     return jsonify(matches)
 
-@app.route('/api/user/<int:user_id>/matches/add', methods=['POST'])
+@app.route('/api/user/<int:user_id>/matches', methods=['POST'])
 def add_user_match(user_id):
     try:
         data = request.json
@@ -300,7 +300,7 @@ def get_match(match_id):
 
     return jsonify(match)
 
-@app.route('/api/match/add', methods=['POST'])
+@app.route('/api/match', methods=['POST'])
 def add_match():
     data = request.json
     start_time = data.get('start_time')

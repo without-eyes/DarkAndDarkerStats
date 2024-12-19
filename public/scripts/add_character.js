@@ -8,7 +8,7 @@ document.getElementById('addCharacterForm').addEventListener('submit', async (e)
     const characterClass = document.getElementById('characterClass').value;
     const level = document.getElementById('characterLevel').value;
 
-    const response = await fetch(`http://localhost:5000/api/user/${userId}/characters/add`, {
+    const response = await fetch(`http://localhost:5000/api/user/${userId}/characters`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

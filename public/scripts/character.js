@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     deleteButton.addEventListener('click', async () => {
         if (confirm('Are you sure you want to delete this character?')) {
             try {
-                const deleteResponse = await fetch(`http://localhost:5000/api/user/${userId}/characters/delete/${characterId}`, {
+                const deleteResponse = await fetch(`http://localhost:5000/api/user/${userId}/characters/${characterId}`, {
                     method: 'DELETE',
                 });
 
