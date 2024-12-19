@@ -280,6 +280,46 @@ def add_user_match(user_id):
         if 'connection' in locals() and connection.is_connected():
             connection.close()
 
+@app.route('/api/user/<int:user_id>/matches/<int:match_id>', methods=['DELETE'])
+def delete_user_match(user_id, match_id):
+    try:
+        connection = get_db_connection()
+        if not connection:
+            return jsonify({"error": "Database connection failed"}), 500
+
+        cursor = connection.cursor(dictionary=True)
+
+        query_check = """
+            SELECT user_matches.character_id 
+            FROM user_matches
+            INNER JOIN characters ON characters.id = user_matches.character_id
+            WHERE characters.user_id = %s AND user_matches.match_id = %s
+        """
+        cursor.execute(query_check, (user_id, match_id))
+        character = cursor.fetchone()
+
+        if not character:
+            return jsonify({"error": "No characters found for this user in the specified match"}), 404
+
+        query_delete = """
+            DELETE FROM user_matches WHERE character_id = %s AND match_id = %s
+        """
+        cursor.execute(query_delete, (character['character_id'], match_id))
+        connection.commit()
+
+        return jsonify({"message": "Character removed from match successfully"}), 200
+    except Error as e:
+        print(f"Database error: {e}")
+        return jsonify({"error": "Database error"}), 500
+    except Exception as e:
+        print(f"Unexpected error: {e}")
+        return jsonify({"error": "Unexpected error occurred"}), 500
+    finally:
+        if 'cursor' in locals() and cursor:
+            cursor.close()
+        if 'connection' in locals() and connection.is_connected():
+            connection.close()
+
 @app.route('/api/match/<int:match_id>', methods=['GET'])
 def get_match(match_id):
     connection = get_db_connection()
@@ -324,6 +364,27 @@ def add_match():
     finally:
         cursor.close()
         connection.close()
+
+@app.route('/api/match/<int:match_id>', methods=['DELETE'])
+def delete_match(match_id):
+    connection = get_db_connection()
+    cursor = connection.cursor()
+
+    try:
+        cursor.execute("DELETE FROM user_matches WHERE match_id = %s", (match_id,))
+        connection.commit()
+
+        cursor.execute("DELETE FROM matches WHERE id = %s", (match_id,))
+        connection.commit()
+
+        if cursor.rowcount == 0:
+            return jsonify({"message": "Match not found"}), 404
+
+        return jsonify({"message": "Match and associated user matches deleted successfully"}), 200
+    finally:
+        cursor.close()
+        connection.close()
+
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)

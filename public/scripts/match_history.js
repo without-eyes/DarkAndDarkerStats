@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         matches.forEach(match => {
             const li = document.createElement('li');
-            li.innerHTML = `<a href="match.html?id=${match.match_id}">Match #${match.match_id} - ${match.map}</a>`;
+            li.innerHTML = `<a href="match.html?userId=${userId}&id=${match.match_id}">Match #${match.match_id} - ${match.map}</a>`;
             matchesList.appendChild(li);
         });
     } catch (error) {

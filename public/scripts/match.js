@@ -18,16 +18,43 @@ document.addEventListener("DOMContentLoaded", async () => {
 });
 
 const urlParams = new URLSearchParams(window.location.search);
-const userId = urlParams.get('id');
-if (userId) {
+const userId = urlParams.get('userId');
+const matchId = urlParams.get('id');
+if (userId && matchId) {
     const deleteMatch = document.getElementById('deleteMatch');
-    deleteMatch.onclick = () => {
-
+    deleteMatch.onclick = async () => {
+        try {
+            const response = await fetch(`http://localhost:5000/api/match/${matchId}`, {
+                method: 'DELETE',
+            });
+            const data = await response.json();
+            if (response.ok) {
+                location.href = `./match_history.html?id=${userId}`;
+            } else {
+                alert(data.error || "Error deleting match");
+            }
+        } catch (error) {
+            console.error("Error:", error);
+            alert("An error occurred while deleting the match.");
+        }
     };
 
     const deleteUserFromMatch = document.getElementById('deleteUserFromMatch');
-    deleteUserFromMatch.onclick = () => {
-
+    deleteUserFromMatch.onclick = async () => {
+        try {
+            const response = await fetch(`http://localhost:5000/api/user/${userId}/matches/${matchId}`, {
+                method: 'DELETE',
+            });
+            const data = await response.json();
+            if (response.ok) {
+                location.href = `./match_history.html?id=${userId}`;
+            } else {
+                alert(data.error || "Error removing user from match");
+            }
+        } catch (error) {
+            console.error("Error:", error);
+            alert("An error occurred while removing the user from the match.");
+        }
     };
 } else {
     console.error("User ID is missing in the URL");
