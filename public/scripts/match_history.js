@@ -18,3 +18,14 @@ document.addEventListener("DOMContentLoaded", async () => {
         console.error('Error fetching match history:', error);
     }
 });
+
+const urlParams = new URLSearchParams(window.location.search);
+const userId = urlParams.get('id');
+if (userId) {
+    const addMatch = document.getElementById('addMatch');
+    addMatch.onclick = () => {
+        location.href = `./add_match.html`;
+    };
+} else {
+    console.error("User ID is missing in the URL");
+}

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add Match</title>
+  <link rel="icon" href="./assets/favicon.ico" type="image/x-icon">
+  <link href="assets/styles.css" rel="stylesheet">
+</head>
+<body>
+<div class="top-panel">
+  <div class="title">Dark and Darker Stats</div>
+</div>
+<div class="background-container">
+  <form id="addMatchForm" class="form-container">
+    <h1>Add New Match</h1>
+    <div class="input-group">
+      <label for="startTime">Start Time</label>
+      <input id="startTime" name="start_time" type="datetime-local" required />
+    </div>
+    <div class="input-group">
+      <label for="endTime">End Time</label>
+      <input id="endTime" name="end_time" type="datetime-local" required />
+    </div>
+    <div class="input-group">
+      <label for="mapName">Map Name</label>
+      <select id="mapName" name="map" required>
+        <option value="" disabled selected>Select a map</option>
+        <option value="Crypt">Crypt</option>
+        <option value="Goblin Caves">Goblin Caves</option>
+        <option value="Ice Abyss">Ice Abyss</option>
+        <option value="Ice Cavern">Ice Cavern</option>
+        <option value="Inferno">Inferno</option>
+        <option value="Ruins">Ruins</option>
+      </select>
+    </div>
+    <div class="button-container">
+      <button type="submit">Add Match</button>
+    </div>
+  </form>
+</div>
+<script src="scripts/add_match.js"></script>
+</body>
+</html>

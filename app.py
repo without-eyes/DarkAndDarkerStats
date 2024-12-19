@@ -266,5 +266,30 @@ def get_match(match_id):
 
     return jsonify(match)
 
+@app.route('/api/match/add', methods=['POST'])
+def add_match():
+    data = request.json
+    start_time = data.get('start_time')
+    end_time = data.get('end_time')
+    map_name = data.get('map')
+
+    if not all([start_time, end_time, map_name]):
+        return jsonify({"message": "Start time, end time, and map are required"}), 400
+
+    connection = get_db_connection()
+    cursor = connection.cursor()
+
+    try:
+        cursor.execute(
+            "INSERT INTO matches (start_time, end_time, map) VALUES (%s, %s, %s)",
+            (start_time, end_time, map_name)
+        )
+        connection.commit()
+        match_id = cursor.lastrowid
+        return jsonify({"message": "Match created successfully", "match_id": match_id}), 201
+    finally:
+        cursor.close()
+        connection.close()
+
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
