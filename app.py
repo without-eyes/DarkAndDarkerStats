@@ -246,6 +246,40 @@ def get_user_matches(user_id):
 
     return jsonify(matches)
 
+@app.route('/api/user/<int:user_id>/matches/add', methods=['POST'])
+def add_user_match(user_id):
+    try:
+        data = request.json
+        required_fields = ['character_id', 'match_id', 'kills', 'escaped']
+        if not all(field in data for field in required_fields):
+            return jsonify({"error": "Missing required fields"}), 400
+
+        connection = get_db_connection()
+        if not connection:
+            return jsonify({"error": "Database connection failed"}), 500
+
+        cursor = connection.cursor()
+        query = """
+            INSERT INTO user_matches (character_id, match_id, kills, `escaped`)
+            VALUES (%s, %s, %s, %s)
+        """
+        values = (data['character_id'], data['match_id'], data['kills'], data['escaped'])
+        cursor.execute(query, values)
+        connection.commit()
+        match_id = cursor.lastrowid
+        return jsonify({"message": "Match added successfully", "match_id": match_id}), 201
+    except Error as e:
+        print(f"Database error: {e}")
+        return jsonify({"error": "Database error"}), 500
+    except Exception as e:
+        print(f"Unexpected error: {e}")
+        return jsonify({"error": "Unexpected error occurred"}), 500
+    finally:
+        if 'cursor' in locals() and cursor:
+            cursor.close()
+        if 'connection' in locals() and connection.is_connected():
+            connection.close()
+
 @app.route('/api/match/<int:match_id>', methods=['GET'])
 def get_match(match_id):
     connection = get_db_connection()

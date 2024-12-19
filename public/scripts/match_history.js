@@ -26,6 +26,11 @@ if (userId) {
     addMatch.onclick = () => {
         location.href = `./add_match.html`;
     };
+
+    const addUserMatch = document.getElementById('addUserMatch');
+    addUserMatch.onclick = () => {
+        location.href = `./add_user_match.html?id=${userId}`;
+    };
 } else {
     console.error("User ID is missing in the URL");
 }

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add User Match</title>
+  <link rel="icon" href="./assets/favicon.ico" type="image/x-icon">
+  <link href="assets/styles.css" rel="stylesheet">
+</head>
+<body>
+<div class="top-panel">
+  <div class="title">Dark and Darker Stats</div>
+</div>
+<div class="background-container">
+  <form id="addUserMatchForm" class="form-container">
+    <h1>Add User Match</h1>
+    <div class="input-group">
+      <label for="characterId">Character ID</label>
+      <input id="characterId" name="character_id" type="number" placeholder="Enter character ID" required />
+    </div>
+    <div class="input-group">
+      <label for="matchId">Match ID</label>
+      <input id="matchId" name="match_id" type="number" placeholder="Enter match ID" required />
+    </div>
+    <div class="input-group">
+      <label for="kills">Kills</label>
+      <input id="kills" name="kills" type="number" placeholder="Enter number of kills" min="0" required />
+    </div>
+    <div class="input-group">
+      <label for="escaped">Escaped</label>
+      <select id="escaped" name="escaped" required>
+        <option value="" disabled selected>Did you escape?</option>
+        <option value="true">Yes</option>
+        <option value="false">No</option>
+      </select>
+    </div>
+    <div class="button-container">
+      <button type="submit">Add Match</button>
+    </div>
+  </form>
+</div>
+<script src="scripts/add_user_match.js"></script>
+</body>
+</html>
