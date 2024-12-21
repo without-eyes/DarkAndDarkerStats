@@ -15,7 +15,12 @@ if (loginForm) {
 
             if (response.ok) {
                 const result = await response.json();
-                window.location.href = `profile.html?id=${result.id}`;
+                const token = result.token;
+                const userId = result.user_id;
+
+                localStorage.setItem('auth_token', token);
+
+                window.location.href = `profile.html?id=${userId}`;
             } else {
                 const result = await response.json();
                 alert('Error: ' + result.message);

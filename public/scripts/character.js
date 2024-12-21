@@ -9,8 +9,16 @@ document.addEventListener("DOMContentLoaded", async () => {
         return;
     }
 
+    const token = localStorage.getItem('token');
+
     try {
-        const response = await fetch(`http://localhost:5000/api/user/${userId}/characters/${characterId}`);
+        const response = await fetch(`http://localhost:5000/api/user/${userId}/characters/${characterId}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+
         if (!response.ok) throw new Error('Не вдалося отримати дані персонажа');
         const character = await response.json();
         document.getElementById('characterName').textContent = character.name || 'Unknown Name';
@@ -28,12 +36,20 @@ document.addEventListener("DOMContentLoaded", async () => {
             try {
                 const deleteResponse = await fetch(`http://localhost:5000/api/user/${userId}/characters/${characterId}`, {
                     method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
                 });
 
-                if (!deleteResponse.ok) throw new Error('Не вдалося видалити персонажа');
+                if (!deleteResponse.ok) {
+                    const errorData = await deleteResponse.json();
+                    throw new Error(errorData.message || 'Не вдалося видалити персонажа');
+                }
+
                 window.location.href = `./characters.html?id=${userId}`;
             } catch (error) {
                 console.error('Failed to delete the character:', error);
+                alert(`Error: ${error.message}`);
             }
         }
     });

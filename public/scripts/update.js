@@ -2,6 +2,7 @@ const form = document.getElementById("accountForm");
 
 const urlParams = new URLSearchParams(window.location.search);
 const userId = urlParams.get('id');
+const token = localStorage.getItem('token');
 
 if (form) {
     form.addEventListener("submit", async (e) => {
@@ -17,7 +18,10 @@ if (form) {
         try {
             const response = await fetch(`http://localhost:5000/api/user/${userId}`, {
                 method: "PATCH",
-                headers: {"Content-Type": "application/json"},
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
                 body: JSON.stringify(data),
             });
 

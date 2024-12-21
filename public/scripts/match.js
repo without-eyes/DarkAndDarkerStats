@@ -4,6 +4,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     try {
         const response = await fetch(`http://localhost:5000/api/match/${matchId}`);
+
         if (!response.ok) throw new Error('Failed to fetch match details');
         const match = await response.json();
         document.getElementById('matchId').textContent = `Match #${match.match_id}`;
@@ -20,12 +21,17 @@ document.addEventListener("DOMContentLoaded", async () => {
 const urlParams = new URLSearchParams(window.location.search);
 const userId = urlParams.get('userId');
 const matchId = urlParams.get('id');
-if (userId && matchId) {
+const token = localStorage.getItem('token');
+
+if (userId && matchId && token) {
     const deleteMatch = document.getElementById('deleteMatch');
     deleteMatch.onclick = async () => {
         try {
             const response = await fetch(`http://localhost:5000/api/match/${matchId}`, {
                 method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
             });
             const data = await response.json();
             if (response.ok) {
@@ -44,6 +50,9 @@ if (userId && matchId) {
         try {
             const response = await fetch(`http://localhost:5000/api/user/${userId}/matches/${matchId}`, {
                 method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
             });
             const data = await response.json();
             if (response.ok) {
@@ -57,5 +66,5 @@ if (userId && matchId) {
         }
     };
 } else {
-    console.error("User ID is missing in the URL");
+    console.error("User ID or Token is missing in the URL");
 }

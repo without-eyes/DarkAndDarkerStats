@@ -1,15 +1,18 @@
+import datetime
 import logging
-
+import os
 import mysql.connector
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 from mysql.connector import Error
 from werkzeug.security import generate_password_hash, check_password_hash
-
+import jwt
+from functools import wraps
 import config
 
 app = Flask(__name__)
 CORS(app, origins=["http://localhost:3000"])
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'fallback_secret_key')
 
 logging.basicConfig(
     level=logging.INFO,
@@ -34,6 +37,24 @@ def get_db_connection():
     except Error as e:
         logger.error(f"Database connection failed: {e}")
         raise
+
+def token_required(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        token = request.headers.get('x-access-token')
+        if not token:
+            return jsonify({'message': 'Token is missing!'}), 401
+
+        try:
+            data = jwt.decode(token, app.config['SECRET_KEY'], algorithms=["HS256"])
+            current_user_id = data['user_id']
+        except Exception as e:
+            logger.warning(f"Invalid token: {e}")
+            return jsonify({'message': 'Token is invalid!'}), 401
+
+        return f(current_user_id, *args, **kwargs)
+
+    return decorated
 
 @app.route('/api/register', methods=['POST'])
 def register_user():
@@ -93,8 +114,13 @@ def login_user():
         logger.warning("Login failed: invalid email or password")
         return jsonify({"message": "Invalid email or password"}), 401
 
+    token = jwt.encode({
+        'user_id': user['id'],
+        'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=1)
+    }, app.config['SECRET_KEY'], algorithm="HS256")
+
     logger.info(f"User {email} logged in successfully")
-    return jsonify({"id": user['id']}), 200
+    return jsonify({"token": token, "user_id": user['id']}), 200
 
 @app.route('/api/user/<int:user_id>', methods=['GET'])
 def get_user(user_id):
@@ -114,7 +140,11 @@ def get_user(user_id):
     return jsonify(user)
 
 @app.route('/api/user/<int:user_id>', methods=['PATCH'])
-def update_user(user_id):
+@token_required
+def update_user(current_user_id, user_id):
+    if current_user_id != user_id:
+        return jsonify({"message": "Unauthorized access"}), 403
+
     data = request.get_json()
     email = data.get('email')
     password = data.get('password')
@@ -151,7 +181,7 @@ def update_user(user_id):
         return jsonify({"message": "User updated successfully"}), 200
 
     except Error as e:
-        print(f"Error: {e}")
+        logger.error(f"Error: {e}")
         return jsonify({"message": "Database error"}), 500
 
     finally:
@@ -185,7 +215,11 @@ def get_character(user_id, character_id):
     return jsonify(character)
 
 @app.route('/api/user/<int:user_id>/characters', methods=['POST'])
-def add_character(user_id):
+@token_required
+def add_character(current_user_id, user_id):
+    if current_user_id != user_id:
+        return jsonify({"message": "Unauthorized access"}), 403
+
     data = request.json
     name = data.get('name')
     char_class = data.get('class')
@@ -210,7 +244,11 @@ def add_character(user_id):
         connection.close()
 
 @app.route('/api/user/<int:user_id>/characters/<int:character_id>', methods=['DELETE'])
-def delete_character(user_id, character_id):
+@token_required
+def delete_character(current_user_id, user_id, character_id):
+    if current_user_id != user_id:
+        return jsonify({"message": "Unauthorized access"}), 403
+
     connection = get_db_connection()
     cursor = connection.cursor()
 
@@ -247,7 +285,11 @@ def get_user_matches(user_id):
     return jsonify(matches)
 
 @app.route('/api/user/<int:user_id>/matches', methods=['POST'])
-def add_user_match(user_id):
+@token_required
+def add_user_match(current_user, user_id):
+    if current_user != user_id:
+        return jsonify({"error": "Unauthorized"}), 403
+
     try:
         data = request.json
         required_fields = ['character_id', 'match_id', 'kills', 'escaped']
@@ -281,7 +323,11 @@ def add_user_match(user_id):
             connection.close()
 
 @app.route('/api/user/<int:user_id>/matches/<int:match_id>', methods=['DELETE'])
-def delete_user_match(user_id, match_id):
+@token_required
+def delete_user_match(current_user, user_id, match_id):
+    if current_user != user_id:
+        return jsonify({"error": "Unauthorized"}), 403
+
     try:
         connection = get_db_connection()
         if not connection:
@@ -341,7 +387,8 @@ def get_match(match_id):
     return jsonify(match)
 
 @app.route('/api/match', methods=['POST'])
-def add_match():
+@token_required
+def add_match(current_user):
     data = request.json
     start_time = data.get('start_time')
     end_time = data.get('end_time')
@@ -366,11 +413,12 @@ def add_match():
         connection.close()
 
 @app.route('/api/match/<int:match_id>', methods=['DELETE'])
-def delete_match(match_id):
-    connection = get_db_connection()
-    cursor = connection.cursor()
-
+@token_required
+def delete_match(current_user, match_id):
     try:
+        connection = get_db_connection()
+        cursor = connection.cursor()
+
         cursor.execute("DELETE FROM user_matches WHERE match_id = %s", (match_id,))
         connection.commit()
 
@@ -384,7 +432,6 @@ def delete_match(match_id):
     finally:
         cursor.close()
         connection.close()
-
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
