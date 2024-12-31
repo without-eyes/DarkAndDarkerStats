@@ -27,10 +27,11 @@ cd DarkAndDarkerStats
 
 ### Install Dependencies
 
-Install the required dependencies using npm:
+Install the required dependencies:
 
 ```bash
 npm install
+pip install -r requirements.txt
 ```
 
 ### Running the Application
